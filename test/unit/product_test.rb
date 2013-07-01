@@ -55,4 +55,16 @@ class ProductTest < ActiveSupport::TestCase
     assert_equal[I18n.translate('activerecord.errors.messages.taken')],
     product.errors[:title]
   end
+
+  test "product title is only valid if 10 characters or more" do
+    product
+    product = Product.new(description: "yyy", price: 5, image_url: "zzz.jpg")
+    product.title="short"
+    assert_equal["must be greater than or equal to 0.01"], product.errors[:price]
+    product.title="ten charac"
+    assert product.invalid?
+    assert_equal ["must be greater than or equal to 0.01"], product.errors[:price]
+    product.title="more than ten"
+    assert product.valid?
+  end
 end
